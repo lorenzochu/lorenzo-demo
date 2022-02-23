@@ -1,0 +1,9 @@
+<div class="container">
+  <div
+    class="option"
+    [ngClass]="{'selected': option.isSelect}"
+    *ngFor="let option of data" (click)="onOptionClick(option)"
+  >
+    {{ option.key }}
+  </div>
+</div>

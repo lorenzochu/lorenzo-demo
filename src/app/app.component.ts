@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'lorenzo-demo';
+  formControl = new FormControl();
+
+  submit() {
+    this.formControl.markAllAsTouched();
+    this.formControl.updateValueAndValidity();
+  }
 }
