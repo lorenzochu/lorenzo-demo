@@ -1,8 +1,14 @@
 import { Component, forwardRef, Input, OnChanges, OnInit } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 
 const DEMO_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => ControlValueAccessorDemoComponent),
+  multi: true
+};
+
+const DEMO_VALIDATORS = {
+  provide: NG_VALIDATORS,
   useExisting: forwardRef(() => ControlValueAccessorDemoComponent),
   multi: true
 };
@@ -11,9 +17,9 @@ const DEMO_VALUE_ACCESSOR = {
   selector: 'app-control-value-accessor-demo',
   templateUrl: './control-value-accessor-demo.component.html',
   styleUrls: ['./control-value-accessor-demo.component.scss'],
-  providers: [DEMO_VALUE_ACCESSOR]
+  providers: [DEMO_VALUE_ACCESSOR, DEMO_VALIDATORS]
 })
-export class ControlValueAccessorDemoComponent implements OnInit, OnChanges, ControlValueAccessor {
+export class ControlValueAccessorDemoComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
   @Input() data = [
     { key: 'A', value: 1, isSelect: false },
@@ -54,6 +60,14 @@ export class ControlValueAccessorDemoComponent implements OnInit, OnChanges, Con
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  registerOnValidatorChange?(fn: any): void {
+    this.onValidatorChange = fn;
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    return control.value.length > 0 ? null : { 'error': 'nothing selected' };
   }
 
   onOptionClick(option: { key: string, value: number, isSelect: boolean }) {
